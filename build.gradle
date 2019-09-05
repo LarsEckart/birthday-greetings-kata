@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'javax.mail:mail:1.4'
+    implementation 'javax.activation:activation:1.1'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
+    testImplementation 'org.assertj:assertj-core:3.11.1'
+    testImplementation 'com.github.kirviq:dumbster:1.7.1'
+}
+
+group = 'xpug.kata'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = '11'
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
