@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class AcceptanceTest {
 
@@ -26,12 +26,15 @@ class AcceptanceTest {
             birthdayService.sendGreetings("employee_data.txt", new XDate("2008/10/08"), "localhost", mailServer.getPort());
 
             assertThat(mailServer.getReceivedEmails()).hasSize(1);
+
             SmtpMessage message = mailServer.getReceivedEmails().get(0);
-            assertThat(message.getBody()).isEqualTo("Happy Birthday, dear John!");
-            assertThat(message.getHeaderValue("Subject")).isEqualTo("Happy Birthday!");
+            assertAll(
+                    () -> assertThat(message.getBody()).isEqualTo("Happy Birthday, dear John!"),
+                    () -> assertThat(message.getHeaderValue("Subject")).isEqualTo("Happy Birthday!"));
+
             List<String> recipients = message.getHeaderValues("To");
-            assertThat(recipients).hasSize(1);
-            assertThat(recipients.get(0)).isEqualTo("john.doe@example.com");
+            assertAll(() -> assertThat(recipients).hasSize(1),
+                    () -> assertThat(recipients.get(0)).isEqualTo("john.doe@example.com"));
         }
     }
 
