@@ -23,7 +23,7 @@ public class BirthdayService {
             Employee employee = new Employee(employeeData[1], employeeData[0], employeeData[2], employeeData[3]);
             if (employee.isBirthday(xDate)) {
                 String recipient = employee.getEmail();
-                String body = "Happy Birthday, dear %NAME%".replace("%NAME%", employee.getFirstName());
+                String body = "Happy Birthday, dear %NAME%!".replace("%NAME%", employee.getFirstName());
                 String subject = "Happy Birthday!";
                 // Create a mail session
                 java.util.Properties props = new java.util.Properties();
