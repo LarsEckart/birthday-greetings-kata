@@ -1,49 +1,57 @@
 package it.xpug.kata.birthday_greetings;
 
-import com.dumbster.smtp.SimpleSmtpServer;
-import com.dumbster.smtp.SmtpMessage;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import java.util.List;
+import static org.assertj.core.api.Assertions.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import jakarta.mail.internet.MimeMessage;
 
-class AcceptanceTest {
+public class AcceptanceTest {
 
+    private static final int NONSTANDARD_PORT = 9999;
     private BirthdayService birthdayService;
+    private GreenMail mailServer;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() throws Exception {
+        mailServer = new GreenMail(new ServerSetup(NONSTANDARD_PORT, null, ServerSetup.PROTOCOL_SMTP));
+        mailServer.start();
         birthdayService = new BirthdayService();
     }
 
-    @Test
-    void willSendGreetings_whenItsSomebodysBirthday() throws Exception {
-        try (SimpleSmtpServer mailServer = SimpleSmtpServer.start(SimpleSmtpServer.AUTO_SMTP_PORT)) {
-
-            birthdayService.sendGreetings("employee_data.txt", new XDate("2008/10/08"), "localhost", mailServer.getPort());
-
-            assertThat(mailServer.getReceivedEmails()).hasSize(1);
-
-            SmtpMessage message = mailServer.getReceivedEmails().get(0);
-            assertAll(
-                    () -> assertThat(message.getBody()).isEqualTo("Happy Birthday, dear John!"),
-                    () -> assertThat(message.getHeaderValue("Subject")).isEqualTo("Happy Birthday!"));
-
-            List<String> recipients = message.getHeaderValues("To");
-            assertAll(() -> assertThat(recipients).hasSize(1),
-                    () -> assertThat(recipients.get(0)).isEqualTo("john.doe@example.com"));
-        }
+    @AfterEach
+    public void tearDown() throws Exception {
+        mailServer.stop();
     }
 
     @Test
-    void willNotSendEmailsWhenNobodysBirthday() throws Exception {
-        try (SimpleSmtpServer mailServer = SimpleSmtpServer.start(SimpleSmtpServer.AUTO_SMTP_PORT)) {
-            birthdayService.sendGreetings("employee_data.txt", new XDate("2008/01/01"), "localhost", mailServer.getPort());
+    public void willSendGreetings_whenItsSomebodysBirthday() throws Exception {
+        birthdayService.sendGreetings("employee_data.txt", new XDate("2008/10/08"), "localhost", NONSTANDARD_PORT);
 
-            assertThat(mailServer.getReceivedEmails()).hasSize(0);
-        }
+        assertThat(mailServer.getReceivedMessages().length)
+            .as("message not sent?")
+            .isEqualTo(1);
+            
+        MimeMessage message = mailServer.getReceivedMessages()[0];
+        assertThat(GreenMailUtil.getBody(message))
+            .isEqualTo("Happy Birthday, dear John");
+        assertThat(message.getSubject())
+            .isEqualTo("Happy Birthday!");
+        assertThat(message.getAllRecipients())
+            .hasSize(1);
+        assertThat(message.getAllRecipients()[0].toString())
+            .isEqualTo("john.doe@example.com");
+    }
+
+    @Test
+    public void willNotSendEmailsWhenNobodysBirthday() throws Exception {
+        birthdayService.sendGreetings("employee_data.txt", new XDate("2008/01/01"), "localhost", NONSTANDARD_PORT);
+
+        assertThat(mailServer.getReceivedMessages().length)
+            .as("what? messages?")
+            .isZero();
     }
 }

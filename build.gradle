@@ -7,22 +7,22 @@ repositories {
 }
 
 dependencies {
-    implementation 'javax.mail:mail:1.4.7'
-    implementation 'javax.activation:activation:1.1.1'
+    implementation 'com.sun.mail:jakarta.mail:2.0.1'
+    implementation 'org.eclipse.angus:angus-mail:1.0.0'
 
-    testImplementation(platform('org.junit:junit-bom:5.13.4'))
+    testImplementation(platform('org.junit:junit-bom:5.11.4'))
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.assertj:assertj-core:3.27.3'
-    testImplementation 'com.github.kirviq:dumbster:1.7.1'
+    testImplementation 'com.icegreen:greenmail:2.0.0'
 }
 
 group = 'xpug.kata'
 version = '1.0.0-SNAPSHOT'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 test {
