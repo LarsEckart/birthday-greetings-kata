@@ -10,18 +10,24 @@ dependencies {
     implementation 'javax.mail:mail:1.4.7'
     implementation 'javax.activation:activation:1.1.1'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.4'
+    testImplementation(platform('org.junit:junit-bom:5.11.4'))
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.assertj:assertj-core:3.27.3'
     testImplementation 'com.github.kirviq:dumbster:1.7.1'
 }
 
 group = 'xpug.kata'
 version = '1.0.0-SNAPSHOT'
-sourceCompatibility = '11'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
 
 test {
     useJUnitPlatform()
+    failOnNoDiscoveredTests = false
 }
 
 tasks.withType(JavaCompile) {

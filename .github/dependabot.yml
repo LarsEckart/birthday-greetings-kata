@@ -5,6 +5,11 @@ updates:
     schedule:
       interval: "daily"
       time: "02:00"
+    groups:
+      junit:
+        patterns:
+          - "org.junit*"
+          - "org.junit.*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
