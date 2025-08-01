@@ -10,7 +10,7 @@ dependencies {
     implementation 'javax.mail:mail:1.4.7'
     implementation 'javax.activation:activation:1.1.1'
 
-    testImplementation(platform('org.junit:junit-bom:5.11.4'))
+    testImplementation(platform('org.junit:junit-bom:5.13.4'))
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.assertj:assertj-core:3.27.3'
