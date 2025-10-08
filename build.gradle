@@ -14,7 +14,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.assertj:assertj-core:3.27.6'
-    testImplementation 'com.icegreen:greenmail:2.1.6'
+    testImplementation 'com.icegreen:greenmail:2.1.7'
 }
 
 group = 'xpug.kata'
